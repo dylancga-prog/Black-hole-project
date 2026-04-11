@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Holes: From Theory to Photograph</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f3;color:#1a1a1a;min-height:100vh}
+
+  .site-hero{background:#002F6C;padding:4rem 2rem 3.5rem;text-align:center}
+  .site-hero h1{font-size:32px;font-weight:500;color:#B5D4F4;margin-bottom:12px;letter-spacing:-.01em}
+  .site-hero p{font-size:16px;color:#85B7EB;max-width:560px;margin:0 auto;line-height:1.7}
+  .site-hero .byline{font-size:13px;color:#378ADD;margin-top:16px}
+
+  .nav-bar{display:flex;justify-content:center;gap:8px;padding:1.25rem 1rem;background:#fff;border-bottom:1px solid #e8e8e5;flex-wrap:wrap;position:sticky;top:0;z-index:50}
+  .nav-btn{background:transparent;border:1px solid #d0d0cc;border-radius:8px;padding:7px 18px;font-size:13px;cursor:pointer;color:#666;transition:all .15s;font-family:inherit}
+  .nav-btn:hover{background:#f5f5f3;color:#1a1a1a}
+  .nav-btn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+
+  .page{display:none}
+  .page.active{display:block}
+
+  .tl-outer{padding:3rem 1.5rem 5rem;max-width:720px;margin:0 auto;position:relative}
+  .tl-spine{position:absolute;left:calc(1.5rem + 20px);top:3rem;bottom:5rem;width:1px;background:#d0d0cc}
+
+  .tl-section{margin-bottom:3.5rem;position:relative}
+  .tl-section:last-child{margin-bottom:0}
+  .era-label{font-size:11px;font-weight:600;letter-spacing:.08em;color:#999;text-transform:uppercase;margin-bottom:1.5rem;padding-left:52px}
+
+  .milestone-row{display:flex;gap:0;align-items:flex-start;margin-bottom:2rem;position:relative}
+  .milestone-row:last-child{margin-bottom:0}
+  .dot-col{width:41px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding-top:18px}
+  .dot{width:14px;height:14px;border-radius:50%;border:2px solid;cursor:pointer;transition:transform .2s;flex-shrink:0}
+  .dot:hover{transform:scale(1.4)}
+  .dot.theory{background:#E6F1FB;border-color:#378ADD}
+  .dot.discover{background:#E1F5EE;border-color:#1D9E75}
+  .dot.image{background:#EEEDFE;border-color:#7F77DD}
+
+  .card{flex:1;background:#fff;border:1px solid #e8e8e5;border-radius:12px;padding:1rem 1.25rem;cursor:pointer;transition:border-color .15s,box-shadow .15s;min-width:0}
+  .card:hover{border-color:#bbb;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .card-year{font-size:12px;color:#999;font-weight:600;white-space:nowrap;padding-top:2px}
+  .card-body{flex:1;min-width:0}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:6px}
+  .pill.theory{background:#E6F1FB;color:#185FA5}
+  .pill.discover{background:#E1F5EE;color:#0F6E56}
+  .pill.image{background:#EEEDFE;color:#534AB7}
+  .card h3{font-size:15px;font-weight:500;color:#1a1a1a;margin-bottom:4px;line-height:1.4}
+  .card p{font-size:13px;color:#666;line-height:1.6}
+  .card-hint{font-size:12px;color:#aaa;margin-top:8px}
+
+  .overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:1.5rem}
+  .overlay.open{display:flex}
+
+  .modal{background:#fff;border-radius:16px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+  .modal-header{padding:1.5rem 1.5rem 1rem;border-bottom:1px solid #e8e8e5;position:sticky;top:0;background:#fff;z-index:10;border-radius:16px 16px 0 0}
+  .modal-header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .modal-close{background:#f5f5f3;border:none;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer;color:#666;font-family:inherit;font-weight:500}
+  .modal-close:hover{background:#e8e8e5}
+  .modal-title{font-size:20px;font-weight:500;color:#1a1a1a;margin:8px 0 4px}
+  .modal-sub{font-size:13px;color:#888}
+  .modal-body{padding:1.25rem 1.5rem}
+  .modal-body p{font-size:14px;color:#444;line-height:1.8;margin-bottom:1rem}
+  .modal-body p:last-child{margin-bottom:0}
+  .modal-body em{font-style:italic}
+
+  .stat-row{display:flex;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap}
+  .stat{flex:1;min-width:100px;background:#f5f5f3;border-radius:8px;padding:.65rem 1rem}
+  .stat-label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;font-weight:600}
+  .stat-val{font-size:14px;font-weight:500;color:#1a1a1a}
+
+  .people-row{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
+  .person{display:flex;align-items:center;gap:8px;background:#f5f5f3;border-radius:8px;padding:8px 12px;flex:1;min-width:160px}
+  .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+  .av-blue{background:#E6F1FB;color:#185FA5}
+  .av-teal{background:#E1F5EE;color:#0F6E56}
+  .av-purple{background:#EEEDFE;color:#534AB7}
+  .person-info p{font-size:13px;font-weight:500;color:#1a1a1a;margin:0;line-height:1.3}
+  .person-info span{font-size:11px;color:#888}
+
+  .source-box{background:#f5f5f3;border-radius:10px;padding:1rem 1.25rem;margin-top:1.25rem;border-left:3px solid #1D9E75}
+  .source-box .src-label{font-size:11px;font-weight:700;color:#0F6E56;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+  .source-box .src-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:3px}
+  .source-box .src-meta{font-size:12px;color:#888;margin-bottom:8px}
+  .source-box a{font-size:13px;color:#185FA5;text-decoration:none;font-weight:500}
+  .source-box a:hover{text-decoration:underline}
+
+  .modal-footer{padding:.75rem 1.5rem 1.25rem;border-top:1px solid #e8e8e5;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;bottom:0;background:#fff;border-radius:0 0 16px 16px}
+  .nav-arrows{display:flex;gap:6px}
+  .nav-arrows button{background:#f5f5f3;border:none;border-radius:8px;padding:7px 16px;font-size:13px;cursor:pointer;color:#444;font-family:inherit;font-weight:500;transition:background .15s}
+  .nav-arrows button:hover{background:#e8e8e5}
+  .nav-arrows button:disabled{opacity:.3;cursor:default}
+  .footer-label{font-size:12px;color:#aaa}
+
+  .sources-page{max-width:720px;margin:0 auto;padding:3rem 1.5rem 5rem}
+  .sources-page h2{font-size:22px;font-weight:500;color:#1a1a1a;margin-bottom:8px}
+  .sources-intro{font-size:14px;color:#666;line-height:1.75;margin-bottom:2.5rem;max-width:620px}
+  .source-card{background:#fff;border:1px solid #e8e8e5;border-radius:12px;padding:1.5rem;margin-bottom:1.25rem}
+  .source-card:last-child{margin-bottom:0}
+  .source-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:1rem}
+  .source-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+  .source-card h3{font-size:15px;font-weight:500;color:#1a1a1a;margin-bottom:4px;line-height:1.4}
+  .source-card .source-author{font-size:13px;color:#888;margin-bottom:1rem}
+  .source-card .source-why{font-size:14px;color:#444;line-height:1.75;margin-bottom:1rem}
+  .source-citation{background:#f5f5f3;border-radius:8px;padding:.75rem 1rem;font-size:12px;color:#555;line-height:1.7;margin-bottom:1rem;font-family:Georgia,serif}
+  .source-card a{font-size:13px;color:#185FA5;text-decoration:none;font-weight:500}
+  .source-card a:hover{text-decoration:underline}
+
+  .site-footer{text-align:center;padding:2rem;font-size:12px;color:#aaa;background:#fff;border-top:1px solid #e8e8e5}
+
+  @media(max-width:500px){
+    .site-hero h1{font-size:24px}
+    .modal{border-radius:12px}
+    .tl-outer{padding:2rem 1rem 4rem}
+    .tl-spine{left:calc(1rem + 20px)}
+    .sources-page{padding:2rem 1rem 4rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="site-hero">
+  <h1>Black holes: from theory to photograph</h1>
+  <p>A history spanning 103 years, from a wartime equation to the first image ever captured of a black hole</p>
+  <div class="byline">Astronomy 1020, Semester Project</div>
+</div>
+
+<div class="nav-bar">
+  <button class="nav-btn active" onclick="showPage('timeline',this)">All milestones</button>
+  <button class="nav-btn" onclick="filterAndShow('theory',this)">Theory</button>
+  <button class="nav-btn" onclick="filterAndShow('discover',this)">Discovery</button>
+  <button class="nav-btn" onclick="filterAndShow('image',this)">First image</button>
+  <button class="nav-btn" onclick="showPage('sources',this)">Sources</button>
+</div>
+
+<div class="page active" id="page-timeline">
+  <div class="tl-outer">
+    <div class="tl-spine"></div>
+
+    <div class="tl-section" id="era-early">
+      <div class="era-label">The foundation, early 20th century</div>
+
+      <div class="milestone-row" data-tag="theory">
+        <div class="dot-col"><div class="dot theory" onclick="openModal(0)"></div></div>
+        <div class="card" onclick="openModal(0)">
+          <div class="card-top">
+            <div class="card-body">
+              <span class="pill theory">Theory</span>
+              <h3>Einstein's General Relativity</h3>
+              <p>Gravity reimagined as a curvature in spacetime, the foundation everything else builds on.</p>
+            </div>
+            <div class="card-year">1915</div>
+          </div>
+          <div class="card-hint">&#8599; Click to read more</div>
+        </div>
+      </div>
+
+      <div class="milestone-row" data-tag="theory">
+        <div class="dot-col"><div class="dot theory" onclick="openModal(1)"></div></div>
+        <div class="card" onclick="openModal(1)">
+          <div class="card-top">
+            <div class="card-body">
+              <span class="pill theory">Theory</span>
+              <h3>Schwarzschild's solution</h3>
+              <p>Written on the Russian front during WWI, the first exact math proving black holes could exist.</p>
+            </div>
+            <div class="card-year">1916</div>
+          </div>
+          <div class="card-hint">&#8599; Click to read more</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-section" id="era-discovery">
+      <div class="era-label">First confirmation, space age</div>
+
+      <div class="milestone-row" data-tag="discover">
+        <div class="dot-col"><div class="dot discover" onclick="openModal(2)"></div></div>
+        <div class="card" onclick="openModal(2)">
+          <div class="card-top">
+            <div class="card-body">
+              <span class="pill discover">Discovery</span>
+              <h3>Cygnus X-1 confirmed</h3>
+              <p>Webster &amp; Murdin publish observational data showing a massive invisible object in the Cygnus constellation.</p>
+            </div>
+            <div class="card-year">1971</div>
+          </div>
+          <div class="card-hint">&#8599; Click to read more</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-section" id="era-image">
+      <div class="era-label">The photograph, modern era</div>
+
+      <div class="milestone-row" data-tag="image">
+        <div class="dot-col"><div class="dot image" onclick="openModal(3)"></div></div>
+        <div class="card" onclick="openModal(3)">
+          <div class="card-top">
+            <div class="card-body">
+              <span class="pill image">First image</span>
+              <h3>The Event Horizon Telescope images M87*</h3>
+              <p>A global network of observatories captures the first-ever photograph of a black hole shadow, 55 million light-years away.</p>
+            </div>
+            <div class="card-year">2019</div>
+          </div>
+          <div class="card-hint">&#8599; Click to read more</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-sources">
+  <div class="sources-page">
+    <h2>Sources</h2>
+
+    <div class="source-card">
+      <div class="source-card-top">
+        <div>
+          <span class="pill theory">Theory, 1916</span>
+          <h3>On the Gravitational Field of a Point Mass, According to Einstein's Theory</h3>
+          <div class="source-author">Karl Schwarzschild, 1916</div>
+        </div>
+        <div class="source-num" style="background:#E6F1FB;color:#185FA5">1</div>
+      </div>
+      <div class="source-citation">Schwarzschild, Karl. "Uber das Gravitationsfeld eines Massenpunktes nach der Einsteinschen Theorie." Sitzungsberichte der Preussischen Akademie der Wissenschaften, 1916. English translation available via ResearchGate.</div>
+      <a href="https://www.researchgate.net/publication/268194491" target="_blank">View English translation on ResearchGate &#8594;</a>
+    </div>
+
+    <div class="source-card">
+      <div class="source-card-top">
+        <div>
+          <span class="pill discover">Discovery, 1972</span>
+          <h3>Observation of a Celestial X-ray Source in Cygnus</h3>
+          <div class="source-author">B.L. Webster and P. Murdin, Nature, 1972</div>
+        </div>
+        <div class="source-num" style="background:#E1F5EE;color:#0F6E56">2</div>
+      </div>
+      <div class="source-citation">Webster, B.L., and P. Murdin. "Cygnus X-1: a Spectroscopic Binary with a Heavy Companion?" Nature 235, no. 5332 (1972): 37-38.</div>
+      <a href="https://www.nature.com/articles/2355037a0" target="_blank">View on Nature journal archive &#8594;</a>
+    </div>
+
+    <div class="source-card">
+      <div class="source-card-top">
+        <div>
+          <span class="pill image">First image, 2019</span>
+          <h3>First M87 Event Horizon Telescope Results. I. The Shadow of the Supermassive Black Hole</h3>
+          <div class="source-author">Event Horizon Telescope Collaboration, The Astrophysical Journal Letters, 2019</div>
+        </div>
+        <div class="source-num" style="background:#EEEDFE;color:#534AB7">3</div>
+      </div>
+      <div class="source-citation">Event Horizon Telescope Collaboration. "First M87 Event Horizon Telescope Results. I. The Shadow of the Supermassive Black Hole." The Astrophysical Journal Letters 875, no. 1 (2019): L1. https://doi.org/10.3847/2041-8213/ab0ec7.</div>
+      <a href="https://iopscience.iop.org/article/10.3847/2041-8213/ab0ec7" target="_blank">View open-access paper on IOP &#8594;</a>
+    </div>
+  </div>
+</div>
+
+<div class="site-footer">
+  Astronomy 1020, Georgia State University. Sources: Schwarzschild (1916), Webster &amp; Murdin (1972), EHT Collaboration (2019)
+</div>
+
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-top">
+        <div id="m-pill"></div>
+        <button class="modal-close" onclick="closeModal()">&#x2715; Close</button>
+      </div>
+      <div class="modal-title" id="m-title"></div>
+      <div class="modal-sub" id="m-sub"></div>
+    </div>
+    <div class="modal-body" id="m-body"></div>
+    <div class="modal-footer">
+      <div class="footer-label" id="m-counter"></div>
+      <div class="nav-arrows">
+        <button id="btn-prev" onclick="navigate(-1)">&#8592; Prev</button>
+        <button id="btn-next" onclick="navigate(1)">Next &#8594;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var current = 0;
+var data = [
+  {
+    tag:'theory',tagLabel:'Theory',year:'1915',
+    title:"Einstein's General Relativity",
+    sub:'Albert Einstein, Berlin, 1915',
+    stats:[{l:'Year',v:'1915'},{l:'Field',v:'Theoretical physics'},{l:'Impact',v:'Redefined gravity'}],
+    people:[{init:'AE',cls:'av-blue',name:'Albert Einstein',role:'Theoretical physicist, Nobel laureate'}],
+    body:'<p>In November of 1915, Albert Einstein released his "Theory of General Relativity." What made his theory different from others is that his theory described gravity as a curvature in the fabric of spacetime itself.</p><p>Einstein actually came up with a mathematical way of putting it when he came up with the equation G\u03bc\u03bd + \u039bg\u03bc\u03bd = (8\u03c0G/c\u2074)T\u03bc\u03bd. This probably looks confusing and it is very complex but it is basically his way of explaining his theory with math. The only issue is that he couldn\'t solve it. An easy way to think of this is as if he came up with x\u00b2 + 4x + 4 = 0, he had the equation, but not the answer.</p><p>He was able to come up with approximate solutions, which were helpful, but not the perfect solution. The equation he came up with was actually so complex that he thought that it may never be solved, and this was the case Until...</p>',
+    src:{label:'Note',title:'General Relativity (1915)',meta:'Einstein, Albert. Annalen der Physik, 1915.',url:null,urlText:null}
+  },
+  {
+    tag:'theory',tagLabel:'Theory',year:'1916',
+    title:"Schwarzschild's solution",
+    sub:'Karl Schwarzschild, Russian front, 1916',
+    stats:[{l:'Year',v:'1916'},{l:'Key term',v:'Schwarzschild radius'},{l:'Context',v:'Written during WWI'}],
+    people:[{init:'KS',cls:'av-blue',name:'Karl Schwarzschild',role:'Physicist, German Army soldier'}],
+    body:'<p>Schwarzschild was able to solve Einstein\'s equations just a few weeks later while sitting in a trench in World War I. The solution that he came up with was ds\u00b2 = -(1 - 2GM/rc\u00b2)c\u00b2dt\u00b2 + (1 - 2GM/rc\u00b2)\u207b\u00b9dr\u00b2 + r\u00b2d\u03a9\u00b2. This is also a very long and complex equation that I cant begin to comprehend but it is basically the math that proved that black holes mathematically must exist if General Relativity is correct.</p><p>Another important thing that came from the equation was rs = 2GM/c\u00b2, also known as the Schwarzschild radius. This tells us exactly how small you would need to compress any object before it became a black hole.</p>',
+    src:{label:'Primary source',title:"On the Gravitational Field of a Point Mass, According to Einstein's Theory",meta:'Schwarzschild, Karl. Sitzungsberichte der Preussischen Akademie der Wissenschaften, 1916.',url:'https://www.researchgate.net/publication/268194491',urlText:'View English translation on ResearchGate \u2192'}
+  },
+  {
+    tag:'discover',tagLabel:'Discovery',year:'1971',
+    title:'Cygnus X-1: the first black hole confirmed',
+    sub:'B.L. Webster and P. Murdin, Nature, 1972',
+    stats:[{l:'Year',v:'1971'},{l:'Location',v:'Cygnus constellation'},{l:'Mass',v:'~21 solar masses'}],
+    people:[
+      {init:'BW',cls:'av-teal',name:'B.L. Webster',role:'Co-author, Nature 1972'},
+      {init:'PM',cls:'av-teal',name:'P. Murdin',role:'Co-author, Nature 1972'}
+    ],
+    body:'<p>Cygnus had been detected in 1964, however nobody really knew what it was. That was until astronomers B.L Webster, and P. Murdin published their analysis in the journal <em>Nature</em>.</p><p>By measuring the orbital motion of a nearby star (HDE 226868) they were able to calculate the mass of a mysterious invisible object that it was orbiting. They knew that it was too big to be a neutron star or a white dwarf, which are the two most dense objects that were known at the time.</p><p>The conclusion that they came to was that it had to be a black hole, making this the first time that observational evidence had pointed to the existence of a black hole in nature. Making what Schwarzschild had proven mathematically in 1916 now confirmed in nature.</p>',
+    src:{label:'Primary source',title:'Observation of a Celestial X-ray Source in Cygnus',meta:'Webster, B.L. and Murdin, P. Nature, 1972.',url:'https://www.nature.com/articles/2355037a0',urlText:'View on Nature journal archive \u2192'}
+  },
+  {
+    tag:'image',tagLabel:'First image',year:'2019',
+    title:'The first photograph of a black hole',
+    sub:'Event Horizon Telescope Collaboration, April 10, 2019',
+    stats:[{l:'Year',v:'2019'},{l:'Black hole',v:'M87*'},{l:'Distance',v:'55 million ly'},{l:'Mass',v:'6.5 billion M\u2609'}],
+    people:[
+      {init:'KB',cls:'av-purple',name:'Katie Bouman',role:'Led imaging algorithm development'},
+      {init:'EHT',cls:'av-purple',name:'EHT Collaboration',role:'200+ researchers, 60+ institutions'}
+    ],
+    body:'<p>On April 10th 2019, the Event Horizon telescope released the first ever photograph of a black hole. The target was M87*, a supermassive black hole at the center of the galaxy Messier 87, located 55 million light-years away, with a mass 6.5 billion times that of our Sun.</p><p>The Event Horizon telescope is not a single big telescope, it is a culmination of 8 radio observatories on multiple continents, functioning together as a single Earth-sized telescope through a technique called Very Long Baseline Interferometry (VLBI).</p><p>The image that was taken showed exactly what General Relativity had predicted, a bright ring of superheated plasma surrounding a dark central shadow. Einstein\'s equation that was first written in 1915, had described this moment with perfect accuracy. The 103-year journey from Schwarzschild\'s wartime calculations to an actual photograph was complete.</p>',
+    src:{label:'Primary source',title:'First M87 Event Horizon Telescope Results. I. The Shadow of the Supermassive Black Hole',meta:'EHT Collaboration. The Astrophysical Journal Letters, 2019.',url:'https://iopscience.iop.org/article/10.3847/2041-8213/ab0ec7',urlText:'View open-access paper on IOP \u2192'}
+  }
+];
+
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  if (name === 'timeline') {
+    document.querySelectorAll('.milestone-row').forEach(function(r){ r.style.display='flex'; });
+    document.querySelectorAll('.tl-section').forEach(function(s){ s.style.display='block'; });
+  }
+}
+
+function filterAndShow(tag, btn) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById('page-timeline').classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.milestone-row').forEach(function(r){
+    r.style.display = r.dataset.tag === tag ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.tl-section').forEach(function(s){
+    var visible = Array.from(s.querySelectorAll('.milestone-row')).some(function(r){ return r.style.display !== 'none'; });
+    s.style.display = visible ? 'block' : 'none';
+  });
+}
+
+function openModal(i) {
+  current = i;
+  renderModal();
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('modal').scrollTop = 0;
+}
+
+function renderModal() {
+  var d = data[current];
+  document.getElementById('m-pill').innerHTML = '<span class="pill '+d.tag+'">'+d.tagLabel+', '+d.year+'</span>';
+  document.getElementById('m-title').textContent = d.title;
+  document.getElementById('m-sub').innerHTML = d.sub;
+  var stats = d.stats.map(function(s){ return '<div class="stat"><div class="stat-label">'+s.l+'</div><div class="stat-val">'+s.v+'</div></div>'; }).join('');
+  var people = d.people.map(function(p){ return '<div class="person"><div class="avatar '+p.cls+'">'+p.init+'</div><div class="person-info"><p>'+p.name+'</p><span>'+p.role+'</span></div></div>'; }).join('');
+  var srcLink = d.src.url ? '<a href="'+d.src.url+'" target="_blank">'+d.src.urlText+'</a>' : '<span style="font-size:12px;color:#aaa">See the Sources tab for the full Chicago citation</span>';
+  document.getElementById('m-body').innerHTML =
+    '<div class="stat-row">'+stats+'</div>'+
+    '<div class="people-row">'+people+'</div>'+
+    d.body+
+    '<div class="source-box"><div class="src-label">'+d.src.label+'</div><div class="src-title">'+d.src.title+'</div><div class="src-meta">'+d.src.meta+'</div>'+srcLink+'</div>';
+  document.getElementById('m-counter').textContent = 'Milestone '+(current+1)+' of '+data.length;
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-next').disabled = current === data.length-1;
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+function overlayClick(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+function navigate(dir) { current = Math.max(0,Math.min(data.length-1,current+dir)); renderModal(); document.getElementById('modal').scrollTop=0; }
+
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('overlay').classList.contains('open')) return;
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'ArrowLeft') navigate(-1);
+  if (e.key === 'ArrowRight') navigate(1);
+});
+</script>
+</body>
+</html>
